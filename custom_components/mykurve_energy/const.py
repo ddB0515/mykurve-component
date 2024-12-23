@@ -1,0 +1,1 @@
+DOMAIN = "mykurve_energy"

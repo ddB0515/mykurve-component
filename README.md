@@ -1,2 +1,3 @@
-# mykurve-component
-HA custom implementation of Energy component
+# MyKurve Energy for Home Assistant
+
+## Installation
