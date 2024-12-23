@@ -7,5 +7,5 @@
   "documentation": "https://github.com/ddB0515/mykurve-energy",
   "iot_class": "cloud_polling",
   "version": "1.0.0",
-  "requirements": ["mykurve==0.0.1"]
+  "requirements": ["mykurve==0.0.2"]
 }

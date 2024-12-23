@@ -7,7 +7,7 @@ from typing import Any
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, CONF_USERNAME
+from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 
 from .const import DOMAIN
 from mykurve import MyKurveApi
@@ -21,6 +21,16 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
     }
 )
 
+async def validate_auth(username: str, password: str) -> None:
+    """Validates a auth token.
+
+    Raises a ValueError if the auth token is invalid.
+    """
+    try:
+        api = MyKurveApi()
+        await api.get_token(username, password).
+    except Exception:
+        raise ValueError
 
 class MyKurveEnergyConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for MyKurve Energy."""
@@ -30,28 +40,22 @@ class MyKurveEnergyConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Handle the initial step."""
+        """Handle the initial setup"""
         errors: dict[str, str] = {}
         if user_input is not None:
             username = user_input[CONF_USERNAME]
             password = user_input[CONF_PASSWORD]
-            api = MyKurveApi()
             try:
-                auth = api.get_token(username, password)
-            except Exception:
-                _LOGGER.exception("Unexpected exception")
-                errors["base"] = "unknown"
-            else:
-                username = user_input[CONF_USERNAME]
-                await self.async_set_unique_id(username)
-                self._abort_if_unique_id_configured()
-                data = {
-                    CONF_EMAIL: password,
+                await validate_auth(userName, password)
+            except ValueError:
+                errors["base"] = "auth"
+
+            data = {
                     CONF_USERNAME: username,
                     CONF_PASSWORD: password,
                 }
-                self._async_abort_entries_match(data)
-                return self.async_create_entry(title=email, data=data)
+            # User is done adding repos, create the config entry.
+            return self.async_create_entry(title=DOMAIN, data=data)
 
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
