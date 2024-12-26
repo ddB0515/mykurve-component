@@ -30,7 +30,7 @@ class MyKurveSensorEntityDescription(SensorEntityDescription):
 
 ENERGY_METER_SENSOR_TYPES = (
     MyKurveSensorEntityDescription(
-        key="usage_kwh",
+        key=f"{DOMAIN}_usage_kwh",
         icon="mdi:fire",
         name="Energy usage kWh",
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
@@ -39,7 +39,7 @@ ENERGY_METER_SENSOR_TYPES = (
         value_fn=lambda res: res.lastMeterReading,
     ),
     MyKurveSensorEntityDescription(
-        key="price_gbp",
+        key=f"{DOMAIN}_price_gbp",
         icon="mdi:cash-multiple",
         name="Energy price usage",
         device_class=SensorDeviceClass.MONETARY,
@@ -78,8 +78,7 @@ class MyKurveSensor(SensorEntity):
         self.entry = entry
 
         """Set up the sensor with the initial values."""
-        self.key = description.key
-        self._attr_unique_id = f"{DOMAIN}_{description.key}"
+        self._attr_unique_id = description.key
         self._attr_name = description.name
         self.entity_description = description
 
