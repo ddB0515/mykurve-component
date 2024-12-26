@@ -79,9 +79,7 @@ class MyKurveSensor(SensorEntity):
 
         """Set up the sensor with the initial values."""
         self.key = description.key
-        self._attr_unique_id = (
-            f"{DOMAIN}_{description.key}"  # type: ignore[union-attr]
-        )
+        self._attr_unique_id = f"{DOMAIN}_{description.key}"
         self._attr_name = description.name
         self.entity_description = description
 
@@ -94,7 +92,7 @@ class MyKurveSensor(SensorEntity):
             await self.mykurve_auth.async_get_access_token()
             token = self.entry.data[CONF_API_TOKEN]
             acc_number = self.entry.data[CONF_ACC_NUMBER]
-            _LOGGER.debug(f"token: {token} - acc_no: {acc_number}")
+            _LOGGER.debug(f"Updated info for account: {acc_number}")
             self.dashboard = await self.api.get_dashboard(token, acc_number)
 
     @property
