@@ -44,7 +44,6 @@ ENERGY_METER_SENSOR_TYPES = (
         name="Energy price usage",
         device_class=SensorDeviceClass.MONETARY,
         native_unit_of_measurement="GBP",
-        suggested_display_precision=3,
         value_fn=lambda res: res.tariffHistory.tariffInForceNow.rate,
     ),
 )
